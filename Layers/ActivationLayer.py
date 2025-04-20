@@ -36,3 +36,18 @@ class SigmoidLayer:
         """
         # couple upstream gradient with local gradient, the result will be sent back to the Linear layer
         self.dZ = upstream_grad * self.A*(1-self.A)
+
+class SoftmaxLayer:
+    def __init__(self, Z_shape):
+        self.Z = np.zeros(Z_shape)
+        self.A = np.zeros(Z_shape)
+        self.dZ = np.zeros(Z_shape)
+    
+    def forward(self, Z):
+        self.Z = Z
+        exp_Z = np.exp(Z - np.max(Z, axis=0, keepdims=True))  # stability
+        self.A = exp_Z / np.sum(exp_Z, axis=0, keepdims=True)
+    
+    def backward(self, dA):
+        # Softmax derivative is handled directly in the cross-entropy backward
+        self.dZ = dA
