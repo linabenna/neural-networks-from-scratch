@@ -51,3 +51,16 @@ class SoftmaxLayer:
     def backward(self, dA):
         # Softmax derivative is handled directly in the cross-entropy backward
         self.dZ = dA
+
+class ReLULayer:
+    def __init__(self, shape):
+        self.Z = np.zeros(shape)
+        self.A = np.zeros(shape)
+        self.dZ = np.zeros(shape)
+
+    def forward(self, Z):
+        self.Z = Z
+        self.A = np.maximum(0, Z)
+
+    def backward(self, dA):
+        self.dZ = dA * (self.Z > 0).astype(float)
