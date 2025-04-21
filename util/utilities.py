@@ -27,12 +27,20 @@ def compute_cost(Y, Y_hat):
     return cost, dY_hat
 
 
-def compute_cross_entropy_loss(Y, Y_hat):
+# def compute_cross_entropy_loss(Y, Y_hat):
+#     m = Y.shape[1]
+#     # Avoid log(0)
+#     log_probs = np.log(Y_hat + 1e-8)
+#     loss = -np.sum(Y * log_probs) / m
+#     dA = Y_hat - Y  # gradient when using softmax + cross-entropy
+#     return loss, dA
+
+def compute_cross_entropy_loss(Y, A):
     m = Y.shape[1]
-    # Avoid log(0)
-    log_probs = np.log(Y_hat + 1e-8)
-    loss = -np.sum(Y * log_probs) / m
-    dA = Y_hat - Y  # gradient when using softmax + cross-entropy
+    epsilon = 1e-12
+    A = np.clip(A, epsilon, 1. - epsilon)
+    loss = -np.sum(Y * np.log(A)) / m
+    dA = A - Y
     return loss, dA
 
 
